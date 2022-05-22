@@ -1,6 +1,7 @@
-const URL = "https://coinranking1.p.rapidapi.com/";
+export const URL = "https://coinranking1.p.rapidapi.com";
+const key = "";
 
-const options = {
+export const options = {
   method: "GET",
   headers: {
     "X-RapidAPI-Host": "coinranking1.p.rapidapi.com",
@@ -8,12 +9,49 @@ const options = {
   },
 };
 
-export const getJSON = async () => {
+export const endPoints = {
+  stats: "stats",
+  coins: "coins",
+};
+
+export const getJSON = async (URL, endpoint, options, additional) => {
   try {
-    const response = await fetch(URL, options);
+    const response = await fetch(`${URL}/${endpoint}${additional}`, options);
+    if (!response.ok) throw new Error("Something went wrong! Please try again");
     const data = await response.json();
-    console.log(data);
+    return data;
   } catch (err) {
-    console.log(err);
+    throw err.message;
   }
 };
+
+export const wait = (waitTime) => {
+  return new Promise((_, reject) => {
+    setTimeout(() => {
+      reject("Request took too long to respond! Please try again!");
+    }, waitTime * 1000);
+  });
+};
+
+export const timeOut = (wait, f1) => {
+  Promise.race([wait, f1])
+    .then((res) => console.log(res))
+    .catch((err) => console.log(err));
+};
+
+const formatter = new Intl.NumberFormat("en", {
+  notation: "compact",
+});
+const percentageFormat = new Intl.NumberFormat("en", {
+  style: "percent",
+});
+
+const currencyFormat = new Intl.NumberFormat("en-US", {
+  style: "currency",
+  currency: "USD",
+  notation: "compact",
+});
+
+export const format = formatter.format;
+export const currencyFormatter = currencyFormat.format;
+export const percentageFormatter = percentageFormat.format;

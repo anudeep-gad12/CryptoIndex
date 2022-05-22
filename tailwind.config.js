@@ -19,6 +19,7 @@ module.exports = {
       other: {
         red: "#dc2626",
         green: "#16a34a",
+        greendark: "#166534",
       },
       fontSize: {
         xl: "1.25rem",
@@ -34,6 +35,10 @@ module.exports = {
       "2xl": { max: "1535px" },
       // => @media (max-width: 1535px) { ... }
 
+      "1.5xl": { max: "1387px" },
+
+      // => @media (max-width: 1387px) { ... }
+
       xl: { max: "1279px" },
       // => @media (max-width: 1279px) { ... }
 
@@ -43,7 +48,7 @@ module.exports = {
       md: { max: "767px" },
       // => @media (max-width: 767px) { ... }
 
-      sm: { max: "639px" },
+      sm: { max: "610px" },
       // => @media (max-width: 639px) { ... }
 
       vsm: { max: "400px" },
