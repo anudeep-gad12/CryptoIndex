@@ -21,7 +21,13 @@ const Main = () => {
 
   const coinsDataAPI = useCallback(async () => {
     setIsLoading(true);
-    const data = await getJSON(URL, endPoints.coins, options, "?limit=10");
+    const data = await getJSON(
+      URL,
+      endPoints.coins,
+      options,
+      undefined,
+      "?limit=10"
+    );
     setCoinsData(data.data);
     setIsLoading(false);
   }, []);

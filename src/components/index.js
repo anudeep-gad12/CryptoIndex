@@ -9,3 +9,5 @@ export { default as LoadingSpinner } from "./UI/LoadingSpinner";
 export { default as Error } from "./UI/Error";
 export { default as Heading } from "./UI/Heading";
 export { default as MainCoins } from "./Main/MainCoins";
+export { default as CryptoCurrencyDetail } from "./CryptoCurrency/CryptoCurrencyDetail";
+export { default as Charts } from "./UI/Charts";

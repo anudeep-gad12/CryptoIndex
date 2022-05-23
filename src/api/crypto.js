@@ -12,11 +12,21 @@ export const options = {
 export const endPoints = {
   stats: "stats",
   coins: "coins",
+  coin: "coin",
 };
 
-export const getJSON = async (URL, endpoint, options, additional) => {
+export const getJSON = async (
+  URL,
+  endpoint,
+  options,
+  additional = "",
+  query = ""
+) => {
   try {
-    const response = await fetch(`${URL}/${endpoint}${additional}`, options);
+    const response = await fetch(
+      `${URL}/${endpoint}${additional}${query}`,
+      options
+    );
     if (!response.ok) throw new Error("Something went wrong! Please try again");
     const data = await response.json();
     return data;
