@@ -33,8 +33,7 @@ const Main = () => {
   }, []);
 
   useEffect(() => {
-    // globalDataAPI();
-    // coinsDataAPI();
+    Promise.allSettled([globalDataAPI(), coinsDataAPI()]);
   }, [globalDataAPI, coinsDataAPI]);
   return (
     <div className=" bg-grey-extralight min-h-[100vh] p-10 1.5xl:p-6">

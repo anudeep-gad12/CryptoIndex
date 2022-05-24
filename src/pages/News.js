@@ -1,10 +1,11 @@
 import React from "react";
-import { Menu } from "../components/index";
+import { Menu, PageHeading } from "../components/index";
 
 const News = () => {
   return (
     <div>
       <Menu />
+      <PageHeading />
     </div>
   );
 };
