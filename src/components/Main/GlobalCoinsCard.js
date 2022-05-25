@@ -61,7 +61,7 @@ const GlobalCoinsCard = (props) => {
             {props.loadingState ? (
               <LoadingSpinner />
             ) : (
-              format(props.globalData.totalMarketCap)
+              `$${format(props.globalData.totalMarketCap)}`
             )}
           </div>
         </div>
@@ -74,7 +74,7 @@ const GlobalCoinsCard = (props) => {
             {props.loadingState ? (
               <LoadingSpinner />
             ) : (
-              format(props.globalData.total24hVolume)
+              `$${format(props.globalData.total24hVolume)}`
             )}
           </div>
         </div>

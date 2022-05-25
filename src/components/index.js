@@ -12,3 +12,4 @@ export { default as MainCoins } from "./Main/MainCoins";
 export { default as CryptoCurrencyDetail } from "./CryptoCurrency/CryptoCurrencyDetail";
 export { default as Charts } from "./UI/Charts";
 export { default as PageHeading } from "./UI/PageHeading";
+export { default as CryptoTable } from "./CryptoCurrency/CryptoTable";
