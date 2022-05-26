@@ -36,7 +36,7 @@ const Main = () => {
     Promise.allSettled([globalDataAPI(), coinsDataAPI()]);
   }, [globalDataAPI, coinsDataAPI]);
   return (
-    <div className=" bg-grey-extralight min-h-[100vh] p-10 1.5xl:p-6">
+    <div className=" min-h-[100vh] p-10 1.5xl:p-6">
       <Heading>Global Statistics</Heading>
       <div className="grid grid-cols-2 gap-4 1.5xl:grid-cols-1 mb-10">
         <GlobalCoinsCard globalData={globalStats} loadingState={isLoading} />

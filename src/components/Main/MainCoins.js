@@ -2,7 +2,7 @@ import React from "react";
 import { Card, LoadingSpinner } from "../index";
 // import { format } from "../../api/crypto";
 import { currencyFormatter } from "../../api/crypto";
-import { Link, useLocation } from "react-router-dom";
+import { Link } from "react-router-dom";
 
 const MainCoins = (props) => {
   return (
@@ -14,7 +14,11 @@ const MainCoins = (props) => {
       ) : (
         <div className="grid grid-cols-3 gap-6 py-4 1.5xl:grid-cols-2 sm:grid-cols-1 ">
           {props?.coinsData?.coins?.map((coin) => (
-            <Link to={`/cryptocurrency/${coin.uuid}`} key={coin.uuid}>
+            <Link
+              to={`/cryptocurrency/${coin.uuid}`}
+              key={coin.uuid}
+              className="hover:scale-110 transition-all	"
+            >
               <Card>
                 <div className="flex justify-between items-center mb-6">
                   <h2 className="font-semibold text-xl">{coin.name}</h2>

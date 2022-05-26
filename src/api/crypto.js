@@ -35,20 +35,6 @@ export const getJSON = async (
   }
 };
 
-export const wait = (waitTime) => {
-  return new Promise((_, reject) => {
-    setTimeout(() => {
-      reject("Request took too long to respond! Please try again!");
-    }, waitTime * 1000);
-  });
-};
-
-export const timeOut = (wait, f1) => {
-  Promise.race([wait, f1])
-    .then((res) => console.log(res))
-    .catch((err) => console.log(err));
-};
-
 const formatter = new Intl.NumberFormat("en", {
   notation: "compact",
 });
@@ -70,6 +56,20 @@ export const getJSONPagination = async (limit, offset, options) => {
   try {
     const response = await fetch(
       `https://coinranking1.p.rapidapi.com/coins?limit=${limit}&offset=${offset}`,
+      options
+    );
+    if (!response.ok) throw new Error("Something went wrong! Please try again");
+    const data = await response.json();
+    return data;
+  } catch (err) {
+    throw err.message;
+  }
+};
+
+export const getJSONSearch = async (query, options) => {
+  try {
+    const response = await fetch(
+      `https://coinranking1.p.rapidapi.com/coins?search=${query}`,
       options
     );
     if (!response.ok) throw new Error("Something went wrong! Please try again");

@@ -3,7 +3,7 @@ import {
   getJSONPagination,
   options,
   currencyFormatter,
-  format,
+  getJSONSearch,
 } from "../../api/crypto";
 import { Link } from "react-router-dom";
 import { LoadingSpinner } from "../index";
@@ -16,12 +16,15 @@ const CryptoTable = () => {
   const coinsDataAPI = useCallback(async (limit, offset) => {
     setIsLoading(true);
     const data = await getJSONPagination(limit, offset, options);
-
-    console.log(data.data.coins);
-
     setCoinsData(data.data);
     setIsLoading(false);
   }, []);
+
+  const searchAPI = useCallback(async (query) => {
+    const data = await getJSONSearch(query, options);
+    console.log(data);
+  }, []);
+
   const nextPageHandler = () => {
     coinsDataAPI(10, pageCounter * 10);
     setPageCounter((prevState) => prevState + 1);
@@ -30,19 +33,31 @@ const CryptoTable = () => {
     coinsDataAPI(10, (pageCounter - 2) * 10);
     setPageCounter((prevState) => prevState - 1);
   };
+
+  const searchHandler = () => {};
+
   useEffect(() => {
-    coinsDataAPI(10, 0);
-  }, [coinsDataAPI]);
+    // coinsDataAPI(10, 0);
+  }, [coinsDataAPI, searchAPI]);
   return (
     <>
-      <div className="flex mb-10  justify-center mt-4">
-        <input
-          type="text"
-          className="w-[70%] px-10 py-2 rounded-lg shadow-md text-xl"
-          placeholder="Search...."
-        />
+      <div className=" mb-10  justify-center mt-4">
+        <form action="" className="flex items-center gap-4 justify-center">
+          <input
+            type="text"
+            className=" w-[70%] px-10 py-2 rounded-lg shadow-md text-lg"
+            placeholder="Search...."
+            onChange={searchHandler}
+          />
+          <button
+            type="submit"
+            className="bg-accent-light rounded-full p-2 text-grey-extralight"
+          >
+            <AiOutlineSearch className="w-6 h-6" />
+          </button>
+        </form>
       </div>
-      <div className="flex justify-center h-[90vh] ">
+      <div className="flex justify-center">
         {isLoading ? (
           <LoadingSpinner />
         ) : (
@@ -61,7 +76,7 @@ const CryptoTable = () => {
                 return (
                   <tr
                     key={coin.uuid}
-                    className="text-center h-[60px] border-solid border-b-2 border-b-[#2222]"
+                    className="text-center h-[60px] border-solid border-b-2 border-b-[#2222] font-semibold	"
                   >
                     <td>{coin.rank}</td>
                     <td>
@@ -76,7 +91,11 @@ const CryptoTable = () => {
                       <div className="">{currencyFormatter(coin.price)}</div>
                     </td>
                     <td>
-                      <div>{coin.change}</div>
+                      {coin.change > 0 ? (
+                        <div className="text-other-green">+{coin.change}%</div>
+                      ) : (
+                        <div className="text-other-red">{coin.change}%</div>
+                      )}
                     </td>
                     <td>{currencyFormatter(coin.marketCap)}</td>
                   </tr>
@@ -86,7 +105,7 @@ const CryptoTable = () => {
           </table>
         )}
       </div>
-      <div className="flex items-center justify-between ">
+      <div className="flex items-center justify-between">
         {pageCounter === 1 ? (
           <button
             disabled
