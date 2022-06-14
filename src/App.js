@@ -1,8 +1,6 @@
 import React from "react";
 import { Routes, Route, Navigate } from "react-router-dom";
 import { Home, News, CryptoList, CryptoDetail, NotFound } from "./pages/index";
-import { getJSON } from "./api/crypto";
-
 const App = () => {
   return (
     <div>

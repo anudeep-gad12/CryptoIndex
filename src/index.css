@@ -12,6 +12,6 @@
   }
 
   .tooltip {
-    @apply lg:hover:after:bg-grey-extralight lg:hover:after:left-16 lg:hover:after:px-2 lg:hover:after:py-1 lg:hover:after:rounded lg:hover:after:text-grey-dark lg:hover:after:absolute lg:relative lg:hover:after:font-semibold lg:hover:after:shadow-md;
+    @apply lg:hover:after:bg-grey-alwhite  lg:hover:after:left-16 lg:hover:after:px-2 lg:hover:after:py-1 lg:hover:after:rounded lg:hover:after:text-grey-dark lg:hover:after:absolute  lg:hover:after:font-semibold lg:hover:after:shadow-md;
   }
 }

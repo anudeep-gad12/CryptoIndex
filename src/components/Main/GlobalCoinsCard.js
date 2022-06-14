@@ -8,8 +8,6 @@ import { AiFillPlusSquare } from "react-icons/ai";
 import { format } from "../../api/crypto";
 
 const GlobalCoinsCard = (props) => {
-  // console.log("Global Card", props.loadingState);
-
   return (
     <Card>
       <div className="flex flex-col gap-2">

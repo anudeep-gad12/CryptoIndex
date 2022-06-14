@@ -1,6 +1,5 @@
 import React from "react";
 import { Menu, PageHeading, CryptoTable } from "../components/index";
-import { Link, Routes, Route } from "react-router-dom";
 const CryptoList = () => {
   return (
     <>

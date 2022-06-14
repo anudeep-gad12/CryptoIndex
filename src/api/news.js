@@ -1,5 +1,5 @@
 export const URL = "https://free-news.p.rapidapi.com/v1/search";
-const key = "";
+const key = process.env.REACT_APP_NEWS_API_KEY;
 
 export const options = {
   method: "GET",
@@ -12,6 +12,7 @@ export const options = {
 export const getJSONNews = async (URL, query = "", options) => {
   try {
     const response = await fetch(`${URL}?q=${query}&lang=en`, options);
+    if (response.status === 429) throw new Error("Many Requests");
     if (!response.ok) throw new Error("Something went wrong! Please try again");
     const data = await response.json();
     return data;

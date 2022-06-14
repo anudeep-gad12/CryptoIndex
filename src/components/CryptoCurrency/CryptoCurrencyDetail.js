@@ -4,9 +4,7 @@ import { URL, options, getJSON, endPoints } from "../../api/crypto";
 import { Charts, Heading, Card, LoadingSpinner } from "../index";
 import { FaSortAmountUpAlt, FaMedal } from "react-icons/fa";
 import {
-  AiOutlineRise,
   AiOutlineFall,
-  AiOutlineSend,
   AiFillDollarCircle,
   AiFillPlusSquare,
   AiOutlineLink,
@@ -24,34 +22,40 @@ const CryptoCurrencyDetail = () => {
   const [coinData, setCoinData] = useState({});
   const [chartsData, setChartsData] = useState({});
   const coinAPI = useCallback(async () => {
-    setIsOtherLoading(true);
-    const data = await getJSON(
-      URL,
-      endPoints.coin,
-      options,
-      `/${params.cryptodetail}`
-    );
-    setCoinData(data.data);
-    setIsOtherLoading(false);
+    try {
+      setIsOtherLoading(true);
+      const data = await getJSON(
+        URL,
+        endPoints.coin,
+        options,
+        `/${params.cryptodetail}`
+      );
+      setCoinData(data.data);
+      setIsOtherLoading(false);
+    } catch (err) {
+      console.log(err);
+    }
   }, [params.cryptodetail]);
 
   const coinPriceHistoryAPI = useCallback(async () => {
     setIsLoading(true);
-    const data = await getJSON(
-      URL,
-      endPoints.coin,
-      options,
-      `/${params.cryptodetail}/history`,
-      `?timePeriod=${timePeriod}`
-    );
+    try {
+      const data = await getJSON(
+        URL,
+        endPoints.coin,
+        options,
+        `/${params.cryptodetail}/history`,
+        `?timePeriod=${timePeriod}`
+      );
 
-    setChartsData(data.data);
-    setIsLoading(false);
+      setChartsData(data.data);
+      setIsLoading(false);
+    } catch (err) {
+      console.log(err);
+    }
   }, [params.cryptodetail, timePeriod]);
 
   useEffect(() => {
-    // coinAPI();
-    // coinPriceHistoryAPI();
     Promise.allSettled([coinAPI(), coinPriceHistoryAPI()]);
   }, [coinAPI, coinPriceHistoryAPI]);
 
@@ -165,7 +169,7 @@ const CryptoCurrencyDetail = () => {
                     </p>
                   ) : (
                     <p className="text-other-red">
-                      -{coinData?.coin["change"]}%
+                      {coinData?.coin["change"]}%
                     </p>
                   )}
                 </div>
@@ -306,7 +310,7 @@ const CryptoCurrencyDetail = () => {
         {isOtherLoading ? (
           <LoadingSpinner />
         ) : (
-          HTMLReactParser(coinData?.coin?.description)
+          HTMLReactParser(String(coinData?.coin?.description))
         )}
       </Card>
     </>

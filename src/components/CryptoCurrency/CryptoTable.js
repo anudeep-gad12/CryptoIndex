@@ -1,53 +1,92 @@
-import React, { useState, useEffect, useCallback } from "react";
+import React, { useState, useEffect, useCallback, useRef } from "react";
 import {
   getJSONPagination,
   options,
   currencyFormatter,
   getJSONSearch,
 } from "../../api/crypto";
+import { debounce } from "../../api/helper";
 import { Link } from "react-router-dom";
 import { LoadingSpinner } from "../index";
 import { AiOutlineSearch } from "react-icons/ai";
 
 const CryptoTable = () => {
+  const inputRef = useRef("");
+  const [isSearchActive, setIsSearchActive] = useState(false);
+  const [searchResults, setSearchResults] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const [coinsData, setCoinsData] = useState({});
   const [pageCounter, setPageCounter] = useState(1);
   const coinsDataAPI = useCallback(async (limit, offset) => {
-    setIsLoading(true);
-    const data = await getJSONPagination(limit, offset, options);
-    setCoinsData(data.data);
-    setIsLoading(false);
+    try {
+      setIsLoading(true);
+      const data = await getJSONPagination(limit, offset, options);
+      setCoinsData(data.data);
+      setIsLoading(false);
+    } catch (err) {
+      console.log(err);
+    }
   }, []);
 
   const searchAPI = useCallback(async (query) => {
-    const data = await getJSONSearch(query, options);
-    console.log(data);
+    try {
+      setIsLoading(true);
+      const data = await getJSONSearch(query, options);
+      setSearchResults(data.data);
+      setIsLoading(false);
+    } catch (err) {
+      console.log(err);
+    }
   }, []);
 
-  const nextPageHandler = () => {
+  const nextPageHandler = debounce(() => {
     coinsDataAPI(10, pageCounter * 10);
     setPageCounter((prevState) => prevState + 1);
-  };
-  const previousPageHandler = () => {
+  });
+  const previousPageHandler = debounce(() => {
     coinsDataAPI(10, (pageCounter - 2) * 10);
     setPageCounter((prevState) => prevState - 1);
+  });
+
+  const submitHandler = (event) => {
+    event.preventDefault();
+    if (inputRef.current.value.length > 0) {
+      setIsSearchActive(true);
+      searchAPI(inputRef.current.value);
+    }
   };
 
-  const searchHandler = () => {};
-
+  const viewAllHandler = () => {
+    setIsSearchActive(false);
+    inputRef.current.value = "";
+  };
   useEffect(() => {
-    // coinsDataAPI(10, 0);
-  }, [coinsDataAPI, searchAPI]);
+    coinsDataAPI(10, 0);
+  }, [coinsDataAPI]);
   return (
     <>
+      {isSearchActive ? (
+        <button
+          className="bg-accent-light text-grey-extralight rounded py-1 px-6"
+          onClick={viewAllHandler}
+        >
+          View All
+        </button>
+      ) : (
+        ""
+      )}
+
       <div className=" mb-10  justify-center mt-4">
-        <form action="" className="flex items-center gap-4 justify-center">
+        <form
+          action=""
+          className="flex items-center gap-4 justify-center"
+          onSubmit={submitHandler}
+        >
           <input
             type="text"
             className=" w-[70%] px-10 py-2 rounded-lg shadow-md text-lg"
             placeholder="Search...."
-            onChange={searchHandler}
+            ref={inputRef}
           />
           <button
             type="submit"
@@ -56,79 +95,175 @@ const CryptoTable = () => {
             <AiOutlineSearch className="w-6 h-6" />
           </button>
         </form>
+        {/* viewall button*/}
       </div>
-      <div className="flex justify-center">
-        {isLoading ? (
-          <LoadingSpinner />
-        ) : (
-          <table className="w-[80%] mb-10">
-            <thead>
-              <tr className="text-center bg-accent-light text-grey-extralight h-[40px]">
-                <th>Rank</th>
-                <th className="w-[25%]">Name</th>
-                <th>Price</th>
-                <th>Change</th>
-                <th className="w-[20%]">MarketCap</th>
-              </tr>
-            </thead>
-            <tbody>
-              {coinsData?.coins?.map((coin) => {
-                return (
-                  <tr
-                    key={coin.uuid}
-                    className="text-center h-[60px] border-solid border-b-2 border-b-[#2222] font-semibold	"
-                  >
-                    <td>{coin.rank}</td>
-                    <td>
-                      <Link to={coin.uuid}>
-                        <div className="flex items-center gap-4 underline underline-offset-2">
-                          <img src={coin.iconUrl} alt="" className="w-4" />
-                          <div>{coin.name}</div>
-                        </div>
-                      </Link>
-                    </td>
-                    <td>
-                      <div className="">{currencyFormatter(coin.price)}</div>
-                    </td>
-                    <td>
-                      {coin.change > 0 ? (
-                        <div className="text-other-green">+{coin.change}%</div>
-                      ) : (
-                        <div className="text-other-red">{coin.change}%</div>
-                      )}
-                    </td>
-                    <td>{currencyFormatter(coin.marketCap)}</td>
-                  </tr>
-                );
-              })}
-            </tbody>
-          </table>
-        )}
-      </div>
-      <div className="flex items-center justify-between">
-        {pageCounter === 1 ? (
-          <button
-            disabled
-            className="px-6 py-2 bg-grey-regular text-grey-extralight"
-          >
-            &larr; Prev
-          </button>
-        ) : (
-          <button
-            onClick={previousPageHandler}
-            className="px-6 py-2 bg-accent-light text-grey-extralight rounded"
-          >
-            &larr; Prev
-          </button>
-        )}
+      {/*View All table  */}
+      {isSearchActive ? (
+        ""
+      ) : (
+        <div className="flex justify-center">
+          {isLoading ? (
+            <div className="flex justify-center items-center h-[80vh]">
+              <LoadingSpinner />
+            </div>
+          ) : (
+            <table className="w-[80%] mb-10 md:w-[95%] md:text-sm md:font-thin">
+              <thead>
+                <tr className="text-center bg-accent-light text-grey-extralight h-[40px]">
+                  <th>Rank</th>
+                  <th className="w-[25%]">Name</th>
+                  <th>Price</th>
+                  <th>Change</th>
+                  <th className="w-[20%]">MarketCap</th>
+                </tr>
+              </thead>
+              <tbody>
+                {coinsData?.coins?.map((coin) => {
+                  return (
+                    <tr
+                      key={coin.uuid}
+                      className="text-center h-[60px] border-solid border-b-2 border-b-[#2222] font-semibold	"
+                    >
+                      <td>{coin.rank}</td>
+                      <td>
+                        <Link to={coin.uuid}>
+                          <div className="flex items-center gap-4 underline underline-offset-2">
+                            <img
+                              src={coin.iconUrl}
+                              alt=""
+                              className="w-4 md:hidden"
+                            />
+                            <div className="md:text-left">{coin?.name}</div>
+                          </div>
+                        </Link>
+                      </td>
+                      <td>
+                        <div className="">{currencyFormatter(coin?.price)}</div>
+                      </td>
+                      <td>
+                        {coin.change > 0 ? (
+                          <div className="text-other-green">
+                            +{coin.change}%
+                          </div>
+                        ) : (
+                          <div className="text-other-red">
+                            {coin.change ? coin.change : "-"}%
+                          </div>
+                        )}
+                      </td>
+                      <td>{currencyFormatter(coin.marketCap)}</td>
+                    </tr>
+                  );
+                })}
+              </tbody>
+            </table>
+          )}
+        </div>
+      )}
 
-        <button
-          onClick={nextPageHandler}
-          className="px-6 py-2 bg-accent-light text-grey-extralight rounded"
-        >
-          Next &rarr;
-        </button>
-      </div>
+      {/* SearchResults Table */}
+      {isSearchActive ? (
+        <div className="flex justify-center">
+          {isLoading ? (
+            <div className="flex justify-center items-center h-[80vh]">
+              <LoadingSpinner />
+            </div>
+          ) : (
+            <table className="w-[80%] mb-10 md:w-[100%] md:text-sm md:font-thin">
+              <thead>
+                <tr className="text-center bg-accent-light text-grey-extralight h-[40px]">
+                  <th>Rank</th>
+                  <th className="w-[25%]">Name</th>
+                  <th>Price</th>
+                  <th>Change</th>
+                  <th className="w-[20%]">MarketCap</th>
+                </tr>
+              </thead>
+              <tbody>
+                {searchResults?.coins?.map((coin) => {
+                  return (
+                    <tr
+                      key={coin.uuid}
+                      className="text-center h-[60px] border-solid border-b-2 border-b-[#2222] font-semibold	"
+                    >
+                      <td>{coin.rank}</td>
+                      <td>
+                        <Link to={coin.uuid}>
+                          <div className="flex items-center gap-4 underline underline-offset-2">
+                            <img
+                              src={coin.iconUrl}
+                              alt=""
+                              className="w-4 md:hidden"
+                            />
+                            <div className="md:text-left">{coin.name}</div>
+                          </div>
+                        </Link>
+                      </td>
+                      <td>
+                        <div className="">{currencyFormatter(coin.price)}</div>
+                      </td>
+                      <td>
+                        {coin.change > 0 ? (
+                          <div className="text-other-green">
+                            +{coin.change}%
+                          </div>
+                        ) : (
+                          <div className="text-other-red">
+                            {coin.change ? `${coin.change}%` : "-"}
+                          </div>
+                        )}
+                      </td>
+                      <td>{currencyFormatter(coin.marketCap)}</td>
+                    </tr>
+                  );
+                })}
+              </tbody>
+            </table>
+          )}
+        </div>
+      ) : (
+        ""
+      )}
+
+      {/* Prev Next buttons */}
+      {isSearchActive ? (
+        ""
+      ) : (
+        <div className="flex items-center justify-between">
+          {pageCounter === 1 ? (
+            <button
+              disabled
+              className="px-6 py-2 bg-grey-regular text-grey-extralight"
+            >
+              &larr; Prev
+            </button>
+          ) : (
+            <button
+              onClick={previousPageHandler}
+              className="px-6 py-2 bg-accent-light text-grey-extralight rounded"
+            >
+              &larr; Prev
+            </button>
+          )}
+
+          {isLoading ? (
+            <button
+              onClick={nextPageHandler}
+              className="px-6 py-2 bg-accent-light text-grey-extralight rounded"
+              disabled
+            >
+              Next &rarr;
+            </button>
+          ) : (
+            <button
+              onClick={nextPageHandler}
+              className="px-6 py-2 bg-accent-light text-grey-extralight rounded"
+            >
+              Next &rarr;
+            </button>
+          )}
+        </div>
+      )}
     </>
   );
 };

@@ -1,5 +1,5 @@
 export const URL = "https://coinranking1.p.rapidapi.com";
-const key = "";
+const key = process.env.REACT_APP_CRYPTO_API_KEY;
 
 export const options = {
   method: "GET",
@@ -35,23 +35,6 @@ export const getJSON = async (
   }
 };
 
-const formatter = new Intl.NumberFormat("en", {
-  notation: "compact",
-});
-const percentageFormat = new Intl.NumberFormat("en", {
-  style: "percent",
-});
-
-const currencyFormat = new Intl.NumberFormat("en-US", {
-  style: "currency",
-  currency: "USD",
-  notation: "compact",
-});
-
-export const format = formatter.format;
-export const currencyFormatter = currencyFormat.format;
-export const percentageFormatter = percentageFormat.format;
-
 export const getJSONPagination = async (limit, offset, options) => {
   try {
     const response = await fetch(
@@ -79,3 +62,20 @@ export const getJSONSearch = async (query, options) => {
     throw err.message;
   }
 };
+
+const formatter = new Intl.NumberFormat("en", {
+  notation: "compact",
+});
+const percentageFormat = new Intl.NumberFormat("en", {
+  style: "percent",
+});
+
+const currencyFormat = new Intl.NumberFormat("en-US", {
+  style: "currency",
+  currency: "USD",
+  notation: "compact",
+});
+
+export const format = formatter.format;
+export const currencyFormatter = currencyFormat.format;
+export const percentageFormatter = percentageFormat.format;
