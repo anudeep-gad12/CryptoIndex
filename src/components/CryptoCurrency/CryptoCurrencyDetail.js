@@ -106,7 +106,7 @@ const CryptoCurrencyDetail = () => {
                   {coinData?.coin["24hVolume"] === "NaN" ||
                   coinData?.coin["24hVolume"] === null
                     ? "-"
-                    : coinData?.coin["24hVolume"]}
+                    : currencyFormatter(coinData?.coin["24hVolume"])}
                 </p>
               )}
             </div>

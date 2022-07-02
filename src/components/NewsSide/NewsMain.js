@@ -55,39 +55,46 @@ const NewsMain = () => {
         </div>
       ) : (
         <div className="grid grid-cols-3 gap-4 lg:grid-cols-2 lg:gap-2 sm:grid-cols-1">
-          {newsData.map((news) => {
-            return (
-              <Card key={news._id}>
-                <div className="flex flex-col">
-                  <div>
-                    <img
-                      src={news.media}
-                      alt={news.title}
-                      className="max-w-[100%] max-h-[250px] h-[100%]"
-                    />
+          {newsData !== undefined ? (
+            newsData?.map((news) => {
+              return (
+                <Card key={news._id}>
+                  <div className="flex flex-col">
+                    <div>
+                      <img
+                        src={news.media}
+                        alt={news.title}
+                        className="max-w-[100%] max-h-[250px] h-[100%]"
+                      />
+                    </div>
+                    <div className="flex justify-between mt-2 mb-4">
+                      <p className="text-xs">{news.clean_url}</p>
+                      <p className="text-xs">
+                        {new Date(news.published_date).toDateString()}
+                      </p>
+                    </div>
+                    <p className="text-lg font-semibold mb-2">{news.title}</p>
+                    <div>
+                      <p>{news.summary.split(" ").slice(0, 20).join(" ")}...</p>
+                      <a
+                        href={news.link}
+                        target="_blank"
+                        className="block px-2 py-1  w-[120px] mt-6 	self-end	hover:bg-grey-alwhite text-accent-dark border-b-2 bg-grey-extralight font-semibold rounded"
+                        rel="noreferrer"
+                      >
+                        Learn More &rarr;
+                      </a>
+                    </div>
                   </div>
-                  <div className="flex justify-between mt-2 mb-4">
-                    <p className="text-xs">{news.clean_url}</p>
-                    <p className="text-xs">
-                      {new Date(news.published_date).toDateString()}
-                    </p>
-                  </div>
-                  <p className="text-lg font-semibold mb-2">{news.title}</p>
-                  <div>
-                    <p>{news.summary.split(" ").slice(0, 20).join(" ")}...</p>
-                    <a
-                      href={news.link}
-                      target="_blank"
-                      className="block px-2 py-1  w-[120px] mt-6 	self-end	hover:bg-grey-alwhite text-accent-dark border-b-2 bg-grey-extralight font-semibold rounded"
-                      rel="noreferrer"
-                    >
-                      Learn More &rarr;
-                    </a>
-                  </div>
-                </div>
-              </Card>
-            );
-          })}
+                </Card>
+              );
+            })
+          ) : (
+            <div className="text-grey">
+              Nothing to show.
+              <p>Search for something else ...</p>
+            </div>
+          )}
         </div>
       )}
     </>
