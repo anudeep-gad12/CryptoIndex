@@ -1,5 +1,5 @@
 export const URL = "https://free-news.p.rapidapi.com/v1/search";
-const key = process.env.REACT_APP_NEWS_API_KEY;
+const key = import.meta.env.VITE_NEWS_API_KEY;
 
 export const options = {
   method: "GET",

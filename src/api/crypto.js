@@ -1,5 +1,5 @@
 export const URL = "https://coinranking1.p.rapidapi.com";
-const key = process.env.REACT_APP_CRYPTO_API_KEY;
+const key = import.meta.env.VITE_CRYPTO_API_KEY;
 
 export const options = {
   method: "GET",
