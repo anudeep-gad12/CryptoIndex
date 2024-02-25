@@ -1,0 +1,21 @@
+{
+  "compilerOptions": {
+    "target": "ESNext",
+    "lib": ["dom", "dom.iterable", "esnext"],
+    "allowJs": true, // Changed to true to include JavaScript files
+    "skipLibCheck": true, // Changed to true to skip type checking of all declaration files (*.d.ts)
+    "esModuleInterop": true,
+    "allowSyntheticDefaultImports": true,
+    "strict": true,
+    "forceConsistentCasingInFileNames": true,
+    "noFallthroughCasesInSwitch": true,
+    "module": "esnext",
+    "moduleResolution": "node",
+    "resolveJsonModule": true,
+    "isolatedModules": true,
+    "noEmit": true, // Keeping noEmit true as Vite handles the compilation
+    "jsx": "react-jsx"
+  },
+  "include": ["src/**/*"], // Ensuring all files under src are included
+  "exclude": ["node_modules"] // It's a good practice to exclude node_modules
+}
