@@ -66,7 +66,7 @@ const CryptoTable = () => {
 
   const submitHandler = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    if (inputRef.current.value.length > 0) {
+    if (inputRef.current && inputRef.current.value.length > 0) {
       setIsSearchActive(true);
       searchAPI(inputRef.current.value);
     }
@@ -74,7 +74,9 @@ const CryptoTable = () => {
 
   const viewAllHandler = () => {
     setIsSearchActive(false);
-    inputRef.current.value = "";
+    if (inputRef.current) {
+      inputRef.current.value = "";
+    }
   };
   useEffect(() => {
     coinsDataAPI(10, 0);
@@ -198,7 +200,7 @@ const CryptoTable = () => {
                 </tr>
               </thead>
               <tbody>
-                {searchResults?.coins?.map((coin: Coin) => {
+                {searchResults?.map((coin: Coin) => {
                   return (
                     <tr
                       key={coin.uuid}

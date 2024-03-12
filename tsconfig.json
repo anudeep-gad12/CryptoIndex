@@ -16,6 +16,6 @@
     "noEmit": true, // Keeping noEmit true as Vite handles the compilation
     "jsx": "react-jsx"
   },
-  "include": ["src/**/*"], // Ensuring all files under src are included
+  "include": ["src/**/*", "vite-env.d.ts"], // Ensuring all files under src are included
   "exclude": ["node_modules"] // It's a good practice to exclude node_modules
 }

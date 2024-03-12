@@ -1,5 +1,5 @@
 export const URL = "https://free-news.p.rapidapi.com/v1/search";
-const key = import.meta.env.VITE_NEWS_API_KEY;
+const key: string = import.meta.env.VITE_NEWS_API_KEY;
 import { optionsType } from "./crypto";
 
 export const options: optionsType = {
