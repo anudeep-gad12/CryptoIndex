@@ -3,17 +3,23 @@ import { Card, LoadingSpinner } from "../index";
 // import { format } from "../../api/crypto";
 import { currencyFormatter } from "../../api/crypto";
 import { Link } from "react-router-dom";
+import {CoinsData} from './Main.types'
 
-const MainCoins = (props) => {
+interface MainCoinsProps {
+  coinsData: CoinsData;
+  LoadingState: boolean;
+}
+
+const MainCoins = ({ coinsData, LoadingState }: MainCoinsProps) => {
   return (
     <>
-      {props.loadingState ? (
+      {LoadingState ? (
         <div className="flex justify-center items-center w-[100%] h-[100%]">
           <LoadingSpinner />
         </div>
       ) : (
         <div className="grid grid-cols-3 gap-6 py-4 1.5xl:grid-cols-2 sm:grid-cols-1 ">
-          {props?.coinsData?.coins?.map((coin) => (
+          {coinsData?.coins?.map((coin) => (
             <Link
               to={`/cryptocurrency/${coin.uuid}`}
               key={coin.uuid}

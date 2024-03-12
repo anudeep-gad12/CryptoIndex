@@ -10,14 +10,30 @@ import { Link } from "react-router-dom";
 import { LoadingSpinner } from "../index";
 import { AiOutlineSearch } from "react-icons/ai";
 
+interface Coin {
+  uuid: string;
+  rank: string;
+  name: string;
+  price: string;
+  change: string;
+  marketCap: string;
+  iconUrl: string;
+}
+
+interface CoinsData {
+  coins: Coin[];
+}
+
+interface SearchResults extends CoinsData {}
+
 const CryptoTable = () => {
-  const inputRef = useRef("");
+  const inputRef = useRef<HTMLInputElement>(null);
   const [isSearchActive, setIsSearchActive] = useState(false);
-  const [searchResults, setSearchResults] = useState([]);
+  const [searchResults, setSearchResults] = useState<Coin[]>([]);
   const [isLoading, setIsLoading] = useState(true);
-  const [coinsData, setCoinsData] = useState({});
-  const [pageCounter, setPageCounter] = useState(1);
-  const coinsDataAPI = useCallback(async (limit, offset) => {
+  const [coinsData, setCoinsData] = useState<CoinsData>({ coins: [] });
+  const [pageCounter, setPageCounter] = useState<number>(1);
+  const coinsDataAPI = useCallback(async (limit: number, offset: number) => {
     try {
       setIsLoading(true);
       const data = await getJSONPagination(limit, offset, options);
@@ -28,7 +44,7 @@ const CryptoTable = () => {
     }
   }, []);
 
-  const searchAPI = useCallback(async (query) => {
+  const searchAPI = useCallback(async (query: string) => {
     try {
       setIsLoading(true);
       const data = await getJSONSearch(query, options);
@@ -39,18 +55,18 @@ const CryptoTable = () => {
     }
   }, []);
 
-  const nextPageHandler = debounce(() => {
+  const nextPageHandler = debounce((): void => {
     coinsDataAPI(10, pageCounter * 10);
     setPageCounter((prevState) => prevState + 1);
   });
-  const previousPageHandler = debounce(() => {
+  const previousPageHandler = debounce((): void => {
     coinsDataAPI(10, (pageCounter - 2) * 10);
     setPageCounter((prevState) => prevState - 1);
   });
 
-  const submitHandler = (event) => {
+  const submitHandler = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    if (inputRef.current.value.length > 0) {
+    if (inputRef.current && inputRef.current.value.length > 0) {
       setIsSearchActive(true);
       searchAPI(inputRef.current.value);
     }
@@ -58,7 +74,9 @@ const CryptoTable = () => {
 
   const viewAllHandler = () => {
     setIsSearchActive(false);
-    inputRef.current.value = "";
+    if (inputRef.current) {
+      inputRef.current.value = "";
+    }
   };
   useEffect(() => {
     coinsDataAPI(10, 0);
@@ -138,10 +156,12 @@ const CryptoTable = () => {
                         </Link>
                       </td>
                       <td>
-                        <div className="">{currencyFormatter(coin?.price)}</div>
+                        <div className="">
+                          {currencyFormatter(parseFloat(coin?.price))}
+                        </div>
                       </td>
                       <td>
-                        {coin.change > 0 ? (
+                        {Number(coin.change) > 0 ? (
                           <div className="text-other-green">
                             +{coin.change}%
                           </div>
@@ -151,7 +171,7 @@ const CryptoTable = () => {
                           </div>
                         )}
                       </td>
-                      <td>{currencyFormatter(coin.marketCap)}</td>
+                      <td>{currencyFormatter(parseFloat(coin.marketCap))}</td>
                     </tr>
                   );
                 })}
@@ -180,7 +200,7 @@ const CryptoTable = () => {
                 </tr>
               </thead>
               <tbody>
-                {searchResults?.coins?.map((coin) => {
+                {searchResults?.map((coin: Coin) => {
                   return (
                     <tr
                       key={coin.uuid}
@@ -200,10 +220,12 @@ const CryptoTable = () => {
                         </Link>
                       </td>
                       <td>
-                        <div className="">{currencyFormatter(coin.price)}</div>
+                        <div className="">
+                          {currencyFormatter(parseFloat(coin.price))}
+                        </div>
                       </td>
                       <td>
-                        {coin.change > 0 ? (
+                        {Number(coin.change) > 0 ? (
                           <div className="text-other-green">
                             +{coin.change}%
                           </div>
@@ -213,7 +235,7 @@ const CryptoTable = () => {
                           </div>
                         )}
                       </td>
-                      <td>{currencyFormatter(coin.marketCap)}</td>
+                      <td>{currencyFormatter(parseFloat(coin.marketCap))}</td>
                     </tr>
                   );
                 })}

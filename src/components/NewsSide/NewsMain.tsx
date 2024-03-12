@@ -3,17 +3,27 @@ import { URL, options, getJSONNews } from "../../api/news";
 import { AiOutlineSearch } from "react-icons/ai";
 import { Card, LoadingSpinner } from "../index";
 
+interface News {
+  _id: string;
+  media: string;
+  title: string;
+  clean_url: string;
+  published_date: string;
+  summary: string;
+  link: string;
+}
+
 const NewsMain = () => {
   const [isLoading, setIsLoading] = useState(true);
-  const [newsData, setNewsData] = useState([]);
-  const inputRef = useRef("");
-  const submitHandler = (event) => {
+  const [newsData, setNewsData] = useState<News[]>([]);
+  const inputRef = useRef<HTMLInputElement>(null);
+  const submitHandler = (event: React.FormEvent<HTMLFormElement>): void => {
     event.preventDefault();
-    if (!inputRef.current.value) return;
+    if (!inputRef.current?.value) return;
     getNews(inputRef.current.value);
     inputRef.current.value = "";
   };
-  const getNews = useCallback(async (query) => {
+  const getNews = useCallback(async (query: string) => {
     try {
       setIsLoading(true);
       const data = await getJSONNews(URL, query, options);
