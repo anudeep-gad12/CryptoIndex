@@ -1,6 +1,6 @@
-# Project Title
+# CryptoIndex
 
-CryptoIndex is a web app that displays updated data of 10,000+ cryptocurrencies and its data such as prices, change, charts, market cap and much more with an integrated news app.
+CryptoIndex is a web application featuring over 10,000 assets, including top listings, crypto-lookup, news, and in-depth profiles.
 
 ## Tech Stack
 

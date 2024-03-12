@@ -14,13 +14,90 @@ import { SiMarketo } from "react-icons/si";
 import { currencyFormatter, format } from "../../api/crypto";
 import HTMLReactParser from "html-react-parser";
 
+interface Coin {
+  uuid: string;
+  name: string;
+  description: string;
+  iconUrl: string;
+  websiteUrl: string;
+  "24hVolume": string;
+  marketCap: string;
+  price: string;
+  change: string;
+  rank: number;
+  supply: {
+    total: string;
+    circulating: string;
+  };
+  allTimeHigh: {
+    price: string;
+    timestamp: number;
+  };
+}
+
+interface CoinDataResponse {
+  coin: Coin;
+}
+
+const initialCoinsData: CoinDataResponse = {
+  coin: {
+    uuid: "",
+    name: "",
+    description: "",
+    iconUrl: "",
+    websiteUrl: "",
+    "24hVolume": "",
+    marketCap: "",
+    price: "",
+    change: "",
+    rank: 0,
+    supply: {
+      total: "",
+      circulating: "",
+    },
+    allTimeHigh: {
+      price: "",
+      timestamp: 0,
+    },
+  },
+};
+
+interface PriceHistory {
+  price: string;
+  timestamp: number;
+}
+
+interface ChartData {
+  change: string;
+  history: PriceHistory[];
+}
+
+interface ChartsDataResponse {
+  chartsData: ChartData[];
+}
+
+const initialChartsDataResponse: ChartsDataResponse = {
+  chartsData: [
+    {
+      change: "",
+      history: [
+        {
+          price: "",
+          timestamp: 0,
+        },
+      ],
+    },
+  ],
+};
 const CryptoCurrencyDetail = () => {
   const params = useParams();
-  const [timePeriod, setTimePeriod] = useState("1y");
+  const [timePeriod, setTimePeriod] = useState<string>("1y");
   const [isLoading, setIsLoading] = useState(true);
   const [isOtherLoading, setIsOtherLoading] = useState(true);
-  const [coinData, setCoinData] = useState({});
-  const [chartsData, setChartsData] = useState({});
+  const [coinData, setCoinData] = useState<CoinDataResponse>(initialCoinsData);
+  const [chartsData, setChartsData] = useState<ChartsDataResponse>(
+    initialChartsDataResponse
+  );
   const coinAPI = useCallback(async () => {
     try {
       setIsOtherLoading(true);
@@ -106,7 +183,7 @@ const CryptoCurrencyDetail = () => {
                   {coinData?.coin["24hVolume"] === "NaN" ||
                   coinData?.coin["24hVolume"] === null
                     ? "-"
-                    : currencyFormatter(coinData?.coin["24hVolume"])}
+                    : currencyFormatter(Number(coinData?.coin["24hVolume"]))}
                 </p>
               )}
             </div>
@@ -125,7 +202,7 @@ const CryptoCurrencyDetail = () => {
                   {coinData?.coin["price"] === "NaN" ||
                   coinData?.coin["price"] === null
                     ? "-"
-                    : currencyFormatter(coinData?.coin["price"])}
+                    : currencyFormatter(Number(coinData?.coin["price"]))}
                 </p>
               )}
             </div>
@@ -144,7 +221,7 @@ const CryptoCurrencyDetail = () => {
                   {coinData?.coin["marketCap"] === "NaN" ||
                   coinData?.coin["marketCap"] === null
                     ? "-"
-                    : currencyFormatter(coinData?.coin["marketCap"])}
+                    : currencyFormatter(Number(coinData?.coin["marketCap"]))}
                 </p>
               )}
             </div>
@@ -163,7 +240,7 @@ const CryptoCurrencyDetail = () => {
                   {coinData?.coin["change"] === "NaN" ||
                   coinData?.coin["change"] === null ? (
                     "-"
-                  ) : coinData?.coin["change"] > 0 ? (
+                  ) : parseFloat(coinData?.coin["change"]) > 0 ? (
                     <p className="text-other-green">
                       +{coinData?.coin["change"]}%
                     </p>
@@ -187,7 +264,7 @@ const CryptoCurrencyDetail = () => {
                 <LoadingSpinner />
               ) : (
                 <p>
-                  {coinData?.coin["rank"] === "NaN" ||
+                  {isNaN(coinData?.coin["rank"]) ||
                   coinData?.coin["rank"] === null
                     ? "-"
                     : coinData?.coin["rank"]}
@@ -210,7 +287,9 @@ const CryptoCurrencyDetail = () => {
                   {coinData?.coin?.allTimeHigh["price"] === "NaN" ||
                   coinData?.coin?.allTimeHigh["price"] === null
                     ? "-"
-                    : currencyFormatter(coinData?.coin?.allTimeHigh["price"])}
+                    : currencyFormatter(
+                        Number(coinData?.coin?.allTimeHigh["price"])
+                      )}
                 </p>
               )}
             </div>
@@ -226,7 +305,7 @@ const CryptoCurrencyDetail = () => {
                 <LoadingSpinner />
               ) : (
                 <p>
-                  {coinData?.coin?.allTimeHigh["timestamp"] === "NaN" ||
+                  {isNaN(coinData?.coin?.allTimeHigh["timestamp"]) ||
                   coinData?.coin?.allTimeHigh["timestamp"] === null
                     ? "-"
                     : new Date(coinData?.coin?.allTimeHigh["timestamp"] * 1000)
@@ -251,7 +330,7 @@ const CryptoCurrencyDetail = () => {
                   {coinData?.coin?.supply["total"] === "NaN" ||
                   coinData?.coin?.supply["total"] === null
                     ? "-"
-                    : format(coinData?.coin?.supply["total"])}
+                    : format(Number(coinData?.coin?.supply["total"]))}
                 </p>
               )}
             </div>
@@ -270,7 +349,7 @@ const CryptoCurrencyDetail = () => {
                   {coinData?.coin?.supply["circulating"] === "NaN" ||
                   coinData?.coin?.supply["circulating"] === null
                     ? "-"
-                    : format(coinData?.coin?.supply["circulating"])}
+                    : format(Number(coinData?.coin?.supply["circulating"]))}
                 </p>
               )}
             </div>

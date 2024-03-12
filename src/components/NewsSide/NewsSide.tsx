@@ -1,10 +1,19 @@
 import React, { useEffect, useCallback, useState } from "react";
 import { getJSONNews, URL, options } from "../../api/news";
 import { Card, Heading, LoadingSpinner } from "../index";
+
+interface News {
+  _id: string;
+  title: string;
+  summary: string;
+  link: string;
+  media: string;
+}
+
 const NewsSide = () => {
   const [isLoading, setIsLoading] = useState(true);
-  const [newsData, setNewsData] = useState([]);
-  const getNews = useCallback(async (query) => {
+  const [newsData, setNewsData] = useState<News[]>([]);
+  const getNews = useCallback(async (query: string) => {
     try {
       setIsLoading(true);
       const data = await getJSONNews(URL, query, options);

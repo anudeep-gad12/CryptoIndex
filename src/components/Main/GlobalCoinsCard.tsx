@@ -6,8 +6,17 @@ import { SiMarketo } from "react-icons/si";
 import { FcCurrencyExchange } from "react-icons/fc";
 import { AiFillPlusSquare } from "react-icons/ai";
 import { format } from "../../api/crypto";
+import { GlobalData } from "./Main.types";
 
-const GlobalCoinsCard = (props) => {
+interface GlobalCoinsCardProps {
+  globalData: GlobalData;
+  LoadingState: boolean;
+}
+
+const GlobalCoinsCard = ({
+  globalData,
+  LoadingState,
+}: GlobalCoinsCardProps) => {
   return (
     <Card>
       <div className="flex flex-col gap-2">
@@ -17,11 +26,7 @@ const GlobalCoinsCard = (props) => {
             <p className="font-medium">Coins</p>
           </div>
           <div>
-            {props.loadingState ? (
-              <LoadingSpinner />
-            ) : (
-              format(props.globalData.totalCoins)
-            )}
+            {LoadingState ? <LoadingSpinner /> : format(globalData.totalCoins)}
           </div>
         </div>
         <div className="flex justify-between">
@@ -30,10 +35,10 @@ const GlobalCoinsCard = (props) => {
             <p className="font-medium"> Markets</p>
           </div>
           <div>
-            {props.loadingState ? (
+            {LoadingState ? (
               <LoadingSpinner />
             ) : (
-              format(props.globalData.totalMarkets)
+              format(globalData.totalMarkets)
             )}
           </div>
         </div>
@@ -43,10 +48,10 @@ const GlobalCoinsCard = (props) => {
             <p className="font-medium"> Exchanges</p>
           </div>
           <div>
-            {props.loadingState ? (
+            {LoadingState ? (
               <LoadingSpinner />
             ) : (
-              format(props.globalData.totalExchanges)
+              format(globalData.totalExchanges)
             )}
           </div>
         </div>
@@ -56,10 +61,10 @@ const GlobalCoinsCard = (props) => {
             <p className="font-medium"> MarketCap</p>
           </div>
           <div>
-            {props.loadingState ? (
+            {LoadingState ? (
               <LoadingSpinner />
             ) : (
-              `$${format(props.globalData.totalMarketCap)}`
+              `$${format(globalData.totalMarketCap)}`
             )}
           </div>
         </div>
@@ -69,10 +74,10 @@ const GlobalCoinsCard = (props) => {
             <p className="font-medium"> 24h Volume</p>
           </div>
           <div>
-            {props.loadingState ? (
+            {LoadingState ? (
               <LoadingSpinner />
             ) : (
-              `$${format(props.globalData.total24hVolume)}`
+              `$${format(globalData.total24hVolume)}`
             )}
           </div>
         </div>

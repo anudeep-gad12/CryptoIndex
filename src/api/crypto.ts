@@ -1,7 +1,12 @@
-export const URL = "https://coinranking1.p.rapidapi.com";
-const key = import.meta.env.VITE_CRYPTO_API_KEY;
+export const URL: string = "https://coinranking1.p.rapidapi.com";
+const key: string = import.meta.env.VITE_CRYPTO_API_KEY;
 
-export const options = {
+export type optionsType = {
+  method: string;
+  headers: { [key: string]: string };
+};
+
+export const options: optionsType = {
   method: "GET",
   headers: {
     "X-RapidAPI-Host": "coinranking1.p.rapidapi.com",
@@ -9,18 +14,18 @@ export const options = {
   },
 };
 
-export const endPoints = {
+export const endPoints: { stats: string; coins: string; coin: string } = {
   stats: "stats",
   coins: "coins",
   coin: "coin",
 };
 
 export const getJSON = async (
-  URL,
-  endpoint,
-  options,
-  additional = "",
-  query = ""
+  URL: string,
+  endpoint: string,
+  options: optionsType,
+  additional: string = "",
+  query: string = ""
 ) => {
   try {
     const response = await fetch(
@@ -30,12 +35,16 @@ export const getJSON = async (
     if (!response.ok) throw new Error("Something went wrong! Please try again");
     const data = await response.json();
     return data;
-  } catch (err) {
+  } catch (err: any) {
     throw err.message;
   }
 };
 
-export const getJSONPagination = async (limit, offset, options) => {
+export const getJSONPagination = async (
+  limit: number,
+  offset: number,
+  options: optionsType
+) => {
   try {
     const response = await fetch(
       `https://coinranking1.p.rapidapi.com/coins?limit=${limit}&offset=${offset}`,
@@ -44,12 +53,12 @@ export const getJSONPagination = async (limit, offset, options) => {
     if (!response.ok) throw new Error("Something went wrong! Please try again");
     const data = await response.json();
     return data;
-  } catch (err) {
+  } catch (err: any) {
     throw err.message;
   }
 };
 
-export const getJSONSearch = async (query, options) => {
+export const getJSONSearch = async (query: string, options: optionsType) => {
   try {
     const response = await fetch(
       `https://coinranking1.p.rapidapi.com/coins?search=${query}`,
@@ -58,7 +67,7 @@ export const getJSONSearch = async (query, options) => {
     if (!response.ok) throw new Error("Something went wrong! Please try again");
     const data = await response.json();
     return data;
-  } catch (err) {
+  } catch (err: any) {
     throw err.message;
   }
 };
