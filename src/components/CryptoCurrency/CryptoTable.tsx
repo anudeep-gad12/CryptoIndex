@@ -29,7 +29,9 @@ interface SearchResults extends CoinsData {}
 const CryptoTable = () => {
   const inputRef = useRef<HTMLInputElement>(null);
   const [isSearchActive, setIsSearchActive] = useState(false);
-  const [searchResults, setSearchResults] = useState<Coin[]>([]);
+  const [searchResults, setSearchResults] = useState<SearchResults>({
+    coins: [],
+  });
   const [isLoading, setIsLoading] = useState(true);
   const [coinsData, setCoinsData] = useState<CoinsData>({ coins: [] });
   const [pageCounter, setPageCounter] = useState<number>(1);
@@ -200,7 +202,7 @@ const CryptoTable = () => {
                 </tr>
               </thead>
               <tbody>
-                {searchResults?.map((coin: Coin) => {
+                {searchResults.coins.map((coin: Coin) => {
                   return (
                     <tr
                       key={coin.uuid}
